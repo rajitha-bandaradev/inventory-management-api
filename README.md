@@ -20,8 +20,8 @@ A production-style RESTful API for inventory management, built with **ASP.NET Co
 
 | Layer | Technology |
 |---|---|
-| Framework | ASP.NET Core 8 (Web API) |
-| ORM | Entity Framework Core 8 |
+| Framework | ASP.NET Core 10 (Web API) |
+| ORM | Entity Framework Core 10 |
 | Database | SQLite (dev) — swappable via repository pattern |
 | Auth | JWT Bearer tokens |
 | Validation | FluentValidation |
@@ -68,7 +68,7 @@ tests/
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 ### Run locally
 
