@@ -1,41 +1,38 @@
+using InventoryApi.Application;
+using InventoryApi.Domain;
+using InventoryApi.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddDbContext<AppDbContext>(o =>
+    o.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=inventory.db"));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Apply migrations automatically on startup (fine for a demo API)
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 }
 
-app.UseHttpsRedirection();
+app.MapOpenApi();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapGet("/api/products", async (IProductRepository repo)
+    => Results.Ok(await repo.GetAllAsync()));
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/api/products/{id:int}", async (int id, IProductRepository repo)
+    => await repo.GetByIdAsync(id) is { } product ? Results.Ok(product) : Results.NotFound());
+
+app.MapGet("/api/products/low-stock", async (IProductRepository repo)
+    => Results.Ok((await repo.GetAllAsync()).Where(p => p.IsLowStock)));
+
+app.MapPost("/api/products", async (Product product, IProductRepository repo) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var created = await repo.AddAsync(product);
+    return Results.Created($"/api/products/{created.Id}", created);
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
