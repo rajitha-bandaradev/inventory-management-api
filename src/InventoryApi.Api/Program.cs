@@ -27,8 +27,8 @@ app.MapGet("/api/products", async (IProductRepository repo)
 app.MapGet("/api/products/{id:int}", async (int id, IProductRepository repo)
     => await repo.GetByIdAsync(id) is { } product ? Results.Ok(product) : Results.NotFound());
 
-app.MapGet("/api/products/low-stock", async (IProductRepository repo)
-    => Results.Ok((await repo.GetAllAsync()).Where(p => p.IsLowStock)));
+app.MapGet("/api/products/low-stock", async (ProductService service)
+    => Results.Ok(await service.GetLowStockProductsAsync()));
 
 app.MapPost("/api/products", async (Product product, FluentValidation.IValidator<Product> validator, IProductRepository repo) =>
 {
