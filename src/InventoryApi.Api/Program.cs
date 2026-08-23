@@ -10,7 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<FluentValidation.IValidator<Product>, ProductValidator>();
-
+builder.Services.AddScoped<ProductService>();
 var app = builder.Build();
 
 // Apply migrations automatically on startup (fine for a demo API)
