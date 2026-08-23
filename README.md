@@ -111,7 +111,7 @@ docker run -p 8080:8080 inventory-api
 ## Roadmap
 
 - [x] Clean Architecture solution scaffold
-- [ ] Product & category CRUD
+- [x] Product & category CRUD
 - [ ] FluentValidation rules
 - [ ] Unit tests (xUnit + Moq)
 - [ ] JWT authentication
