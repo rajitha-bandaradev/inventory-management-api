@@ -112,8 +112,8 @@ docker run -p 8080:8080 inventory-api
 
 - [x] Clean Architecture solution scaffold
 - [x] Product & category CRUD
-- [ ] FluentValidation rules
-- [ ] Unit tests (xUnit + Moq)
+- [x] FluentValidation rules
+- [x] Unit tests (xUnit + Moq)
 - [ ] JWT authentication
 - [ ] GitHub Actions CI
 - [ ] Dockerfile + docker-compose
