@@ -9,6 +9,7 @@ builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=inventory.db"));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<FluentValidation.IValidator<Product>, ProductValidator>();
 
 var app = builder.Build();
 
@@ -29,8 +30,12 @@ app.MapGet("/api/products/{id:int}", async (int id, IProductRepository repo)
 app.MapGet("/api/products/low-stock", async (IProductRepository repo)
     => Results.Ok((await repo.GetAllAsync()).Where(p => p.IsLowStock)));
 
-app.MapPost("/api/products", async (Product product, IProductRepository repo) =>
+app.MapPost("/api/products", async (Product product, FluentValidation.IValidator<Product> validator, IProductRepository repo) =>
 {
+    var validation = await validator.ValidateAsync(product);
+    if (!validation.IsValid)
+        return Results.ValidationProblem(validation.ToDictionary());
+
     var created = await repo.AddAsync(product);
     return Results.Created($"/api/products/{created.Id}", created);
 });
