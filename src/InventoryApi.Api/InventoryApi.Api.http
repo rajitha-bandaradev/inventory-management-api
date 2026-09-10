@@ -1,6 +1,23 @@
-@InventoryApi.Api_HostAddress = http://localhost:5262
+@host = http://localhost:5262
 
-GET {{InventoryApi.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### Get all products
+GET {{host}}/api/products
 
-###
+### Update product 1
+PUT {{host}}/api/products/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Wireless Mouse Pro",
+  "sku": "WM-001",
+  "price": 5500,
+  "quantityInStock": 100,
+  "reorderLevel": 20
+}
+
+### Delete product 2
+DELETE {{host}}/api/products/2
+
+### Delete a product that doesn't exist (expect 404)
+DELETE {{host}}/api/products/999

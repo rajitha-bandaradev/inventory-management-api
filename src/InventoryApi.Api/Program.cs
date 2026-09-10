@@ -40,4 +40,18 @@ app.MapPost("/api/products", async (Product product, FluentValidation.IValidator
     return Results.Created($"/api/products/{created.Id}", created);
 });
 
+app.MapPut("/api/products/{id:int}", async (int id, Product product,
+    FluentValidation.IValidator<Product> validator, IProductRepository repo) =>
+{
+    if (id != product.Id) return Results.BadRequest("Route id and body id must match.");
+
+    var validation = await validator.ValidateAsync(product);
+    if (!validation.IsValid) return Results.ValidationProblem(validation.ToDictionary());
+
+    return await repo.UpdateAsync(product) ? Results.NoContent() : Results.NotFound();
+});
+
+app.MapDelete("/api/products/{id:int}", async (int id, IProductRepository repo)
+    => await repo.DeleteAsync(id) ? Results.NoContent() : Results.NotFound());
+
 app.Run();

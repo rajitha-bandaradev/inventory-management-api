@@ -59,6 +59,10 @@ dlldata.c
 
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
+# Local SQLite database
+*.db
+*.db-shm
+*.db-wal
 
 # .NET
 project.lock.json

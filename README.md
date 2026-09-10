@@ -97,7 +97,7 @@ docker run -p 8080:8080 inventory-api
 
 ## API Endpoints
 
-<!-- TODO: Update this table as you build each endpoint -->
+
 
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
@@ -111,7 +111,7 @@ docker run -p 8080:8080 inventory-api
 ## Roadmap
 
 - [x] Clean Architecture solution scaffold
-- [x] Product & category CRUD
+- [x] Product CRUD (GET, POST, PUT, DELETE)
 - [x] FluentValidation rules
 - [x] Unit tests (xUnit + Moq)
 - [ ] JWT authentication
