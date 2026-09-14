@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path="ci.yml" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/InventoryApi.Api/InventoryApi.Api.csproj" />
     <Project Path="src/InventoryApi.Application/InventoryApi.Application.csproj" />
