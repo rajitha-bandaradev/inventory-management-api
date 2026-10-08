@@ -11,6 +11,7 @@ A production-style RESTful API for inventory management, built with **ASP.NET Co
 - EF Core persistence with migrations applied automatically on startup
 - Unit tests with xUnit + Moq
 - CI pipeline via GitHub Actions — build and test on every push
+- Docker support (multi-stage build)
 
 ### Planned
 
@@ -18,7 +19,6 @@ A production-style RESTful API for inventory management, built with **ASP.NET Co
 - Category CRUD
 - Pagination, filtering, and sorting on list endpoints
 - Global error handling middleware
-- Docker support (multi-stage build)
 - Azure App Service deployment with Azure SQL
 
 ## Tech Stack
@@ -31,6 +31,7 @@ A production-style RESTful API for inventory management, built with **ASP.NET Co
 | Validation | FluentValidation |
 | Testing | xUnit, Moq |
 | CI/CD | GitHub Actions |
+| Containerisation | Docker |
 
 ## Architecture
 
@@ -105,6 +106,15 @@ dotnet test
 
 Writes are validated before they reach the database: invalid payloads return `400` with per-field messages, and requests for a missing product return `404`.
 
+### Run with Docker
+
+```bash
+docker build -t inventory-api .
+docker run -p 8080:8080 inventory-api
+```
+
+Then open `http://localhost:8080/api/products`.
+
 ## Roadmap
 
 - [x] Clean Architecture solution scaffold
@@ -113,7 +123,8 @@ Writes are validated before they reach the database: invalid payloads return `40
 - [x] Unit tests (xUnit + Moq)
 - [x] GitHub Actions CI
 - [ ] JWT authentication
-- [ ] Dockerfile + docker-compose
+- [x] Dockerfile (multi-stage build)
+- [ ] docker-compose
 - [ ] Azure App Service deployment
 
 ## About Me
