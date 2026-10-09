@@ -12,10 +12,11 @@ A production-style RESTful API for inventory management, built with **ASP.NET Co
 - Unit tests with xUnit + Moq
 - CI pipeline via GitHub Actions — build and test on every push
 - Docker support (multi-stage build)
+- JWT authentication & role-based authorisation
 
 ### Planned
 
-- JWT authentication & role-based authorisation
+
 - Category CRUD
 - Pagination, filtering, and sorting on list endpoints
 - Global error handling middleware
@@ -32,7 +33,7 @@ A production-style RESTful API for inventory management, built with **ASP.NET Co
 | Testing | xUnit, Moq |
 | CI/CD | GitHub Actions |
 | Containerisation | Docker |
-
+| Auth | JWT Bearer tokens |
 ## Architecture
 
 Clean Architecture with strict dependency direction — outer layers depend on inner, never the reverse:
@@ -95,15 +96,17 @@ dotnet test
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/products` | List all products |
-| GET | `/api/products/{id}` | Get product by ID |
-| GET | `/api/products/low-stock` | Products at or below their reorder level |
-| POST | `/api/products` | Create a product (validated) |
-| PUT | `/api/products/{id}` | Update a product (validated) |
-| DELETE | `/api/products/{id}` | Delete a product |
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/api/auth/login` | Get a JWT bearer token | — |
+| GET | `/api/products` | List all products | — |
+| GET | `/api/products/{id}` | Get product by ID | — |
+| GET | `/api/products/low-stock` | Products at or below their reorder level | — |
+| POST | `/api/products` | Create a product (validated) | Bearer |
+| PUT | `/api/products/{id}` | Update a product (validated) | Bearer |
+| DELETE | `/api/products/{id}` | Delete a product | Bearer |
 
+Reads are public; writes require a bearer token. Demo credentials (`admin` / `admin123`) are hardcoded so the sample runs out of the box — a production system would verify hashed passwords from the database, and the signing key in `appsettings.json` would come from environment variables or a secret store.
 Writes are validated before they reach the database: invalid payloads return `400` with per-field messages, and requests for a missing product return `404`.
 
 ### Run with Docker
@@ -122,7 +125,7 @@ Then open `http://localhost:8080/api/products`.
 - [x] FluentValidation rules
 - [x] Unit tests (xUnit + Moq)
 - [x] GitHub Actions CI
-- [ ] JWT authentication
+- [x] JWT authentication
 - [x] Dockerfile (multi-stage build)
 - [ ] docker-compose
 - [ ] Azure App Service deployment

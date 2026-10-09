@@ -1,23 +1,40 @@
 @host = http://localhost:5262
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTc5MTU1ODQ1MiwiaXNzIjoiSW52ZW50b3J5QXBpIiwiYXVkIjoiSW52ZW50b3J5QXBpQ2xpZW50cyJ9._XWCz4f5NDzUkPB6T7ym6A067LlwP8NnTKjQHh7JDs4
 
-### Get all products
+### Get all products (public - no token needed)
 GET {{host}}/api/products
 
-### Update product 1
-PUT {{host}}/api/products/1
+### Delete without a token (expect 401 Unauthorized)
+DELETE {{host}}/api/products/3
+
+### Login to get a token
+# @name login
+POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "Wireless Mouse Pro",
-  "sku": "WM-001",
-  "price": 5500,
-  "quantityInStock": 100,
-  "reorderLevel": 20
+  "username": "admin",
+  "password": "admin123"
 }
 
-### Delete product 2
-DELETE {{host}}/api/products/2
+### Login with wrong password (expect 401)
+POST {{host}}/api/auth/login
+Content-Type: application/json
 
-### Delete a product that doesn't exist (expect 404)
-DELETE {{host}}/api/products/999
+{
+  "username": "admin",
+  "password": "wrong"
+}
+
+### Create a product with the token (expect 201)
+POST {{host}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Laptop Stand",
+  "sku": "LS-005",
+  "price": 7500,
+  "quantityInStock": 25,
+  "reorderLevel": 5
+}
